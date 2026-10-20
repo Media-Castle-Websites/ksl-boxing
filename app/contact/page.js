@@ -90,7 +90,7 @@ export default function ContactPage() {
                         Montag &amp; Donnerstag: 17:30 - 20:30 Uhr<br />
                         Dienstag: 18:00 - 20:30 Uhr<br />
                         Mittwoch &amp; Freitag: 19:00 - 20:30 Uhr<br />
-                        Samstag &amp; Sonntag: kein Training
+                        Samstag &amp; Sonntag: nach Vereinbarung
                       </p>
                       <a href="/training-times" className="text-sm text-primary hover:underline">
                         Alle Gruppen und Zeiten
