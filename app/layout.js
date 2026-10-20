@@ -4,7 +4,7 @@ import Footer from '@/components/Footer';
 import CookieBanner from '@/components/CookieBanner';
 import { Toaster } from '@/components/ui/toaster';
 
-const SITE_URL = 'https://ksl-boxing.com';
+const SITE_URL = 'https://www.ksl-boxing.com';
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
@@ -102,6 +102,12 @@ const jsonLd = {
     { '@type': 'City', name: 'Lahr/Schwarzwald' },
     { '@type': 'City', name: 'Offenburg' },
     { '@type': 'AdministrativeArea', name: 'Ortenaukreis' },
+  ],
+  // Trainingszeiten aus app/training-times/page.js (erstes bis letztes Training je Tag)
+  openingHoursSpecification: [
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Thursday'], opens: '17:30', closes: '20:30' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Tuesday', opens: '18:00', closes: '20:30' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Wednesday', 'Friday'], opens: '19:00', closes: '20:30' },
   ],
 };
 

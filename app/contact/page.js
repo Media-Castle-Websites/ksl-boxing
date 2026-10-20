@@ -66,7 +66,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h3 className="font-semibold mb-1">Telefon</h3>
-                      <p className="text-muted-foreground">+49 7821 123456</p>
+                      <a href="tel:+4978215020962" className="text-muted-foreground hover:text-primary transition-colors duration-200">+49 7821 502 09 62</a>
                     </div>
                   </div>
 
@@ -76,7 +76,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h3 className="font-semibold mb-1">E-Mail</h3>
-                      <p className="text-muted-foreground">info@ksl-boxing.com</p>
+                      <a href="mailto:info@ksl-boxing.com" className="text-muted-foreground hover:text-primary transition-colors duration-200">info@ksl-boxing.com</a>
                     </div>
                   </div>
 
@@ -85,12 +85,16 @@ export default function ContactPage() {
                       <Clock className="w-6 h-6 text-primary-foreground" />
                     </div>
                     <div>
-                      <h3 className="font-semibold mb-1">Öffnungszeiten</h3>
+                      <h3 className="font-semibold mb-1">Trainingszeiten</h3>
                       <p className="text-muted-foreground">
-                        Montag - Freitag: 16:00 - 22:00 Uhr<br />
-                        Samstag: 09:00 - 16:00 Uhr<br />
-                        Sonntag: Geschlossen
+                        Montag &amp; Donnerstag: 17:30 - 20:30 Uhr<br />
+                        Dienstag: 18:00 - 20:30 Uhr<br />
+                        Mittwoch &amp; Freitag: 19:00 - 20:30 Uhr<br />
+                        Samstag &amp; Sonntag: kein Training
                       </p>
+                      <a href="/training-times" className="text-sm text-primary hover:underline">
+                        Alle Gruppen und Zeiten
+                      </a>
                     </div>
                   </div>
                 </CardContent>

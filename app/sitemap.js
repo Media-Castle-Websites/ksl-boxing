@@ -1,4 +1,4 @@
-const SITE_URL = 'https://ksl-boxing.com';
+const SITE_URL = 'https://www.ksl-boxing.com';
 
 export default function sitemap() {
   const routes = [
