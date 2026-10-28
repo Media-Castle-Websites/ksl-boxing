@@ -1,0 +1,62 @@
+# Live-Seite bei Mittwald (Projekt „KSL Boxing“, p-ih210h): bei jedem Push auf main baut
+# GitHub die Seite, lädt den Bau per SSH hoch, holt die Pakete und startet die App neu
+# (KD 27.10.2026, 10:05). Mittwald startet eine Node.js-App nicht selbst neu.
+# Zugang: nur der SSH-Schlüssel ist geheim (Secret MITTWALD_SSH_KEY). Resend-Zugang
+# liegen nur auf dem Server in .env, nie hier.
+name: Mittwald
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: mittwald
+  cancel-in-progress: false
+
+env:
+  SSH_BENUTZER: ssh-vei9ez@p-ih210h
+  SSH_HOST: ssh.lashorst.project.host
+  ZIEL: html/ksl-boxing-z6tm4
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      # Das Repo hat keine package-lock.json: GitHub löst die Versionen einmal auf und lädt die
+      # Sperrdatei mit hoch, damit der Server genau dieselben Pakete holt wie beim Bauen.
+      - run: npm install --no-audit --no-fund
+
+      - name: Bauen
+        run: npx next build
+        env:
+          # Die Formular-Route legt den Resend-Zugang schon beim Laden an; beim Bauen reicht ein Platzhalter,
+          # zur Laufzeit gilt der echte Wert aus .env auf dem Server.
+          RESEND_API_KEY: re_platzhalter_nur_fuer_den_bau
+
+      - name: SSH-Zugang
+        env:
+          SSH_KEY: ${{ secrets.MITTWALD_SSH_KEY }}
+          KNOWN_HOSTS: ${{ vars.MITTWALD_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/mittwald && chmod 600 ~/.ssh/mittwald
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+      - name: Zu Mittwald hochladen
+        run: |
+          SSH="ssh -i $HOME/.ssh/mittwald -o IdentitiesOnly=yes -l $SSH_BENUTZER"
+          rsync -az --delete --exclude cache -e "$SSH" .next/ "$SSH_HOST:$ZIEL/.next/"
+          rsync -az --delete -e "$SSH" public/ "$SSH_HOST:$ZIEL/public/"
+          rsync -az -e "$SSH" package.json package-lock.json next.config.js "$SSH_HOST:$ZIEL/"
+
+      - name: Pakete holen und neu starten
+        run: |
+          ssh -i ~/.ssh/mittwald -o IdentitiesOnly=yes -l "$SSH_BENUTZER" "$SSH_HOST" \
+            "cd $ZIEL && npm ci --no-audit --no-fund && mittnitectl job restart node"
